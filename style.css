@@ -107,6 +107,8 @@ a:hover {
   align-items: start;
   width: fit-content;
   max-width: 100%;
+  /* 3-row grid in the bubble column: name, time, message */
+  grid-template-rows: auto auto auto;
 }
 /* Place text elements in the right-hand column by default */
 .list-card.example .slack .slackname,
@@ -114,6 +116,10 @@ a:hover {
 .list-card.example .slack .slackmessage {
   grid-column: 2;
 }
+/* Position rows: name (row1), time (row2), message (row3) */
+.list-card.example .slack .slackname { grid-row: 1; }
+.list-card.example .slack .slacktime { grid-row: 2; }
+.list-card.example .slack .slackmessage { grid-row: 3; }
 
 /* Avatar */
 .list-card.example .slack picture,
@@ -136,7 +142,8 @@ a:hover {
 .slacktime {
   color: #94a3b8; /* slate-400 */
   font-size: 12px;
-  margin-left: 6px;
+  margin-left: 0;
+  margin-top: 2px;
 }
 
 /* Bubble */
