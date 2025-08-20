@@ -56,6 +56,13 @@ a:hover {
   --bubble-left: #f1f5f9; /* slate-100 */
   --bubble-right: #4f46e5; /* indigo-600 */
   --radius: 16px;
+
+  /* New: more realistic bubble styling tokens */
+  --bubble-left-bg: #ffffff;
+  --bubble-left-border: #e2e8f0; /* slate-200 */
+  --bubble-shadow: 0 1px 1px rgba(15, 23, 42, 0.04), 0 2px 6px rgba(15, 23, 42, 0.06);
+  --bubble-right-bg: linear-gradient(180deg, #6366f1 0%, #4f46e5 100%);
+  --bubble-right-accent: #4338ca; /* for small UI elements on right bubbles */
 }
 
 /* widen only the example containers to allow side-by-side layout */
@@ -89,14 +96,17 @@ a:hover {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  align-items: flex-start; /* children start left unless overridden */
 }
 
 /* Single message row */
 .list-card.example .slack {
   display: grid;
-  grid-template-columns: 48px 1fr;
+  grid-template-columns: 48px auto; /* avatar then bubble to its right */
   column-gap: 12px;
   align-items: start;
+  width: fit-content;
+  max-width: 100%;
 }
 /* Place text elements in the right-hand column by default */
 .list-card.example .slack .slackname,
@@ -131,17 +141,25 @@ a:hover {
 
 /* Bubble */
 .slackmessage {
-  background: var(--bubble-left);
+  /* Left (incoming) bubble */
+  background: var(--bubble-left-bg);
+  border: 1px solid var(--bubble-left-border);
+  box-shadow: var(--bubble-shadow);
   display: inline-block;
   padding: 10px 12px;
-  border-radius: var(--radius);
-  max-width: 78%;
-  line-height: 1.4;
+  border-radius: 14px 14px 14px 6px; /* soften corners, tighter near tail */
+  max-width: 76%;
+  line-height: 1.5;
   color: var(--text);
   position: relative;
   margin-top: 6px;
   overflow-wrap: anywhere;
   word-break: break-word;
+  white-space: pre-wrap; /* respect line breaks */
+  transition: filter 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
+}
+.slackmessage:hover {
+  filter: brightness(1.01);
 }
 .slackmessage::after {
   content: '';
@@ -149,39 +167,99 @@ a:hover {
   left: -6px;
   top: 12px;
   width: 0; height: 0;
-  border-right: 6px solid var(--bubble-left);
+  border-right: 6px solid var(--bubble-left-bg);
   border-top: 6px solid transparent;
   border-bottom: 6px solid transparent;
 }
+/* Tiny border for the left tail to match the bubble border */
+.slackmessage::before {
+  content: '';
+  position: absolute;
+  left: -7px;
+  top: 12px;
+  width: 0; height: 0;
+  border-right: 7px solid var(--bubble-left-border);
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+}
 
-/* Right-aligned messages (alternate) */
+/* Right-aligned messages (alternate): keep avatar left-of-bubble, but align row to the right */
 .list-card.example .slack:nth-child(even) {
-  grid-template-columns: 1fr 48px;
+  grid-template-columns: 48px auto;
+  align-self: flex-end; /* push the whole row to the right */
 }
 .list-card.example .slack:nth-child(even) picture {
-  grid-column: 2;
+  grid-column: 1;
 }
 .list-card.example .slack:nth-child(even) .slackname,
 .list-card.example .slack:nth-child(even) .slacktime,
 .list-card.example .slack:nth-child(even) .slackmessage {
-  grid-column: 1;
-  justify-self: end;
+  grid-column: 2;
+  justify-self: start;
   text-align: left;
 }
 .list-card.example .slack:nth-child(even) .slackmessage {
-  background: var(--bubble-right);
+  background: var(--bubble-right-bg);
   color: #fff;
+  border: none;
+  box-shadow: var(--bubble-shadow);
+  border-radius: 14px 6px 14px 14px; /* tighter near the right tail */
 }
 .list-card.example .slack:nth-child(even) .slackmessage::after {
   left: auto;
   right: -6px;
   border-right: none;
-  border-left: 6px solid var(--bubble-right);
+  border-left: 6px solid #4f46e5; /* end color of the gradient */
+}
+/* Right bubble tail subtle glow/edge */
+.list-card.example .slack:nth-child(even) .slackmessage::before {
+  content: '';
+  position: absolute;
+  right: -7px;
+  top: 12px;
+  width: 0; height: 0;
+  border-left: 7px solid rgba(0,0,0,0.12);
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
 }
 
 /* Tidy up spacing between name/time and bubble */
 .slackname ~ br { display: none; }
 .slackname + .slacktime { vertical-align: baseline; }
+
+/* Slightly tighten stacked message spacing for realism */
+.list-card.example .slack + .slack .slackmessage { margin-top: 4px; }
+
+/* Inline content styles inside bubbles */
+.slackmessage a {
+  color: #2563eb; /* blue-600 */
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.list-card.example .slack:nth-child(even) .slackmessage a {
+  color: #bfdbfe; /* blue-200 for contrast on dark bubble */
+}
+.slackmessage code {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 0 4px;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.95em;
+}
+.list-card.example .slack:nth-child(even) .slackmessage code {
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.22);
+  color: #fff;
+}
+
+/* Optional: compact timestamps fade like Slack when near bubbles */
+.slacktime {
+  opacity: 0.9;
+}
+.list-card.example .slack:hover .slacktime {
+  opacity: 1;
+}
 
 /* Responsive: stack columns and widen chat bubbles a bit */
 @media (max-width: 720px) {
