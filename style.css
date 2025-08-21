@@ -189,36 +189,36 @@ a:hover {
   visibility: hidden;
 }
 
-/* Right-aligned messages (alternate): keep avatar left-of-bubble, but align row to the right */
-.list-card.example .slack:nth-child(even) {
+/* Right-aligned messages (by role): add .right to the .slack row */
+.list-card.example .slack.right {
   grid-template-columns: 48px auto;
   align-self: flex-end; /* push the whole row to the right */
 }
-.list-card.example .slack:nth-child(even) picture {
+.list-card.example .slack.right picture {
   grid-column: 1;
 }
-.list-card.example .slack:nth-child(even) .slackname,
-.list-card.example .slack:nth-child(even) .slacktime,
-.list-card.example .slack:nth-child(even) .slackmessage {
+.list-card.example .slack.right .slackname,
+.list-card.example .slack.right .slacktime,
+.list-card.example .slack.right .slackmessage {
   grid-column: 2;
   justify-self: start;
   text-align: left;
 }
-.list-card.example .slack:nth-child(even) .slackmessage {
+.list-card.example .slack.right .slackmessage {
   background: var(--bubble-right-bg);
   color: #fff;
   border: none;
   box-shadow: var(--bubble-shadow);
   border-radius: 14px 6px 14px 14px; /* tighter near the right tail */
 }
-.list-card.example .slack:nth-child(even) .slackmessage::after {
+.list-card.example .slack.right .slackmessage::after {
   left: auto;
   right: -6px;
   border-right: none;
   border-left: 6px solid #4f46e5; /* end color of the gradient */
 }
 /* Right bubble tail subtle glow/edge */
-.list-card.example .slack:nth-child(even) .slackmessage::before {
+.list-card.example .slack.right .slackmessage::before {
   content: '';
   position: absolute;
   right: -7px;
@@ -242,7 +242,7 @@ a:hover {
   text-decoration: underline;
   text-underline-offset: 2px;
 }
-.list-card.example .slack:nth-child(even) .slackmessage a {
+.list-card.example .slack.right .slackmessage a {
   color: #bfdbfe; /* blue-200 for contrast on dark bubble */
 }
 .slackmessage code {
@@ -253,7 +253,7 @@ a:hover {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
   font-size: 0.95em;
 }
-.list-card.example .slack:nth-child(even) .slackmessage code {
+.list-card.example .slack.right .slackmessage code {
   background: rgba(255,255,255,0.18);
   border: 1px solid rgba(255,255,255,0.22);
   color: #fff;
