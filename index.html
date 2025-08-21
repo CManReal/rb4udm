@@ -441,43 +441,6 @@
   <script>
     whyyyyy = "url('./goat.png')"
   </script>
-  <script>
-    // Keep consecutive messages from the same sender on the same side
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('.list-card.example').forEach((example) => {
-        let prevUser = null;
-        let prevRight = null;
-
-        example.querySelectorAll('.slack').forEach((row, idx) => {
-          const nameEl = row.querySelector('.slackname');
-          const avatarEl = row.querySelector('img');
-          const keyRaw = (nameEl?.textContent || avatarEl?.getAttribute('src') || '').trim().toLowerCase();
-          const userKey = keyRaw || null;
-          const isRight = row.classList.contains('right');
-
-          if (idx === 0) {
-            prevUser = userKey;
-            prevRight = isRight;
-            return;
-          }
-
-          if (userKey && userKey === prevUser) {
-            // Enforce same side/color as previous message from the same sender
-            if (prevRight) {
-              row.classList.add('right');
-            } else {
-              row.classList.remove('right');
-            }
-            // prevRight remains the same
-          } else {
-            // New sender: update the reference side
-            prevUser = userKey;
-            prevRight = isRight;
-          }
-        });
-      });
-    });
-  </script>
 </body>
 
 </html>

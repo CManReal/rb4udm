@@ -275,3 +275,8 @@ a:hover {
   }
   .slackmessage { max-width: 86%; }
 }
+
+/* Reorder in the first example: show Carter's second message first (left, gray) */
+.list-card.example.one .slack:nth-child(2) {
+  order: -1;
+}
